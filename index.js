@@ -40,7 +40,7 @@ async function run() {
           res.send(allNewUsers);
         });
       } else {
-        console.log("err");
+        res.status(404).send({ message: "User already exits" });
       }
     });
     // Login User
