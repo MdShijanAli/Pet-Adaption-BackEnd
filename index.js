@@ -29,7 +29,11 @@ async function run() {
     // Signup user
     app.post("/signup", async (req, res) => {
       const newUserInfo = req.body;
-      if (!newUserInfo.email) {
+      const isNewUser = {
+        email: req.body.email,
+      };
+      const newUserEmail = await signUpUserCollection.findOne(isNewUser);
+      if (!newUserEmail) {
         bcrypt.hash(req.body.password, saltRounds, async function (err, hash) {
           if (err) {
             throw new Error("Error while hashing the password");
