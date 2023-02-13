@@ -29,10 +29,8 @@ async function run() {
     // Signup user
     app.post("/signup", async (req, res) => {
       const newUserInfo = req.body;
-      bcrypt.hash(
-        req.body.password && req.body.confirmPassword,
-        saltRounds,
-        async function (err, hash) {
+      if (!newUserInfo.email) {
+        bcrypt.hash(req.body.password, saltRounds, async function (err, hash) {
           if (err) {
             throw new Error("Error while hashing the password");
           }
@@ -40,8 +38,10 @@ async function run() {
 
           const allNewUsers = await signUpUserCollection.insertOne(newUserInfo);
           res.send(allNewUsers);
-        }
-      );
+        });
+      } else {
+        console.log("err");
+      }
     });
     // Login User
     app.post("/login", async (req, res) => {
