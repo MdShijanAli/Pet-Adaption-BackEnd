@@ -54,11 +54,18 @@ async function run() {
           req.body.password,
           findUser?.password
         );
+
         if (passwordIsCorrect == true) {
           res.send(findUser);
         }
       }
       console.log("err");
+    });
+    // Get user all
+    app.get("/allUsers", async (req, res) => {
+      const query = {};
+      const cursor = await signUpUserCollection.find(query).toArray();
+      res.send(cursor);
     });
     // Get All pets
     app.get("/pets", async (req, res) => {
