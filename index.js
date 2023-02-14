@@ -69,7 +69,17 @@ async function run() {
     app.get("/allUsers", async (req, res) => {
       const query = {};
       const cursor = await signUpUserCollection.find(query).toArray();
+
       res.send(cursor);
+    });
+    // Get a single user
+    app.get("/user", async (req, res) => {
+      const findEmail = req.query.email;
+      const filter = {
+        email: findEmail,
+      };
+      const findSingleUser = await signUpUserCollection.findOne(filter);
+      res.send(findSingleUser);
     });
     // Get All pets
     app.get("/pets", async (req, res) => {
@@ -87,29 +97,28 @@ async function run() {
       const cursor = await petsCollection.find(query).toArray();
       res.send(cursor);
     });
-
+    //
+    app.put("/pet/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const value = req.body;
+      const updateDocs = {
+        $set: {
+          value,
+        },
+      };
+      const updateUsers = await signUpUserCollection.updateOne(
+        query,
+        updateDocs
+      );
+      res.send(updateUsers);
+    });
     app.post("/pet", async (req, res) => {
       const pet = req.body;
       const newPets = await petsCollection.insertOne(pet);
       res.send(newPets);
     });
 
-    app.put("/pet/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const options = { upsert: true };
-      const updateDocs = {
-        $set: {
-          description: req.body,
-        },
-      };
-      const updateReviews = await reviewsCollection.updateOne(
-        query,
-        updateDocs,
-        options
-      );
-      res.send(newPets);
-    });
     app.get("/pets/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
