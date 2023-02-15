@@ -25,6 +25,9 @@ async function run() {
       .db("petAdoption")
       .collection("signupUser");
     const petsCollection = client.db("petAdoption").collection("pet");
+    const savedPetsCollection = client
+      .db("petAdoption")
+      .collection("savedPets");
 
     // Signup user
     app.post("/signup", async (req, res) => {
@@ -65,6 +68,15 @@ async function run() {
       }
       console.log("err");
     });
+    app.get("/email", async (req, res) => {
+      const email = req.query.email;
+      const query = { email };
+      const findUser = await signUpUserCollection.findOne(query);
+      if (findUser) {
+        res.send(findUser);
+      }
+      console.log("err");
+    });
     // Get user all
     app.get("/allUsers", async (req, res) => {
       const query = {};
@@ -98,6 +110,18 @@ async function run() {
       res.send(cursor);
     });
     //
+    // pet saved
+    app.post("/pet/:id/save", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = {
+        _id: ObjectId(id),
+      };
+      const cursor = await petsCollection.findOne(query);
+      const savedPet = await savedPetsCollection.insertOne(cursor);
+      res.send(savedPet);
+    });
+    // Updated pet by id
     app.put("/pet/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
