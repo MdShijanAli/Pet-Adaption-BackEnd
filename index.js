@@ -101,14 +101,14 @@ async function run() {
       res.send(allPets);
     });
     // get pets by id
-    app.get("/pets/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = {
-        _id: new ObjectId(id),
-      };
-      const cursor = await petsCollection.find(query).toArray();
-      res.send(cursor);
-    });
+    /*     app.get("/pets/:id", async (req, res) => {
+          const id = req.params.id;
+          const query = {
+            _id: new ObjectId(id),
+          };
+          const cursor = await petsCollection.find(query).toArray();
+          res.send(cursor);
+        }); */
     //
     // pet saved
     app.post("/pet/:id/save", async (req, res) => {
@@ -140,7 +140,7 @@ async function run() {
       const query = { email };
       const userFind = await signUpUserCollection.findOne(query);
       if (userFind) {
-        const value = req.body;
+        const options = { upsert: true };
         const updateDocs = {
           $set: {
             firstName: req.body.firstName,
