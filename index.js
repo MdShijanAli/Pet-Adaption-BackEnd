@@ -135,20 +135,23 @@ async function run() {
       res.send(updatePets);
     });
     // Update user profile
-    app.put("/user/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const value = req.body;
-      const updateDocs = {
-        $set: {
-          value,
-        },
-      };
-      const updateUsers = await signUpUserCollection.updateOne(
-        query,
-        updateDocs
-      );
-      res.send(updateUsers);
+    app.put("/user", async (req, res) => {
+      const email = req.query.email;
+      const query = { email };
+      const userFind = await signUpUserCollection.findOne(query);
+      if (userFind) {
+        const value = req.body;
+        const updateDocs = {
+          $set: {
+            value,
+          },
+        };
+        const updateUsers = await signUpUserCollection.updateOne(
+          query,
+          updateDocs
+        );
+        res.send(updateUsers);
+      }
     });
 
     app.post("/pet", async (req, res) => {
