@@ -163,6 +163,25 @@ async function run() {
       const singlePet = await petsCollection.findOne(query);
       res.send(singlePet);
     });
+    // Delete pets
+    app.delete("/pet/:id/save", async (req, res) => {
+      const id = req.params.id;
+      const query = {
+        _id: ObjectId(id),
+      };
+      const deletePets = await savedPetsCollection.deleteOne(query);
+      res.send(deletePets);
+    });
+
+    // User pets
+    app.get("/pet/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {
+        _id: ObjectId(id),
+      };
+      const getPets = await savedPetsCollection.find(query).toArray();
+      res.send(getPets);
+    });
 
     app.get("/", (req, res) => {
       res.send("Your website is running in web");
