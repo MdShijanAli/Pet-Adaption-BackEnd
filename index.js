@@ -141,6 +141,7 @@ async function run() {
       const userFind = await signUpUserCollection.findOne(query);
       if (userFind) {
         const value = req.body;
+        const options = { upsert: true }
         const updateDocs = {
           $set: {
             value,
@@ -148,7 +149,8 @@ async function run() {
         };
         const updateUsers = await signUpUserCollection.updateOne(
           query,
-          updateDocs
+          updateDocs,
+          options
         );
         res.send(updateUsers);
       }
