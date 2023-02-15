@@ -131,12 +131,26 @@ async function run() {
           value,
         },
       };
+      const updatePets = await petsCollection.updateOne(query, updateDocs);
+      res.send(updatePets);
+    });
+    // Update user profile
+    app.put("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const value = req.body;
+      const updateDocs = {
+        $set: {
+          value,
+        },
+      };
       const updateUsers = await signUpUserCollection.updateOne(
         query,
         updateDocs
       );
       res.send(updateUsers);
     });
+
     app.post("/pet", async (req, res) => {
       const pet = req.body;
       const newPets = await petsCollection.insertOne(pet);
