@@ -96,7 +96,7 @@ async function run() {
     // Get All pets
     app.get("/pets", async (req, res) => {
       const query = {};
-      const cursor = await petsCollection.find(query);
+      const cursor = await petsCollection.find(query).sort({ _id: -1 });
       const allPets = await cursor.toArray();
       res.send(allPets);
     });
